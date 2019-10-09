@@ -39,6 +39,33 @@ open Revery.UI.Components;
 /*     }); */
 /* }; */
 
+let style = Style.[]
+let textStyle = Style.[color(Colors.white), fontFamily("Roboto-Regular.ttf"), fontSize(20)]
+
+let button = {
+  let component = React.component("Button");
+
+  (~children as _: list(React.syntheticElement), ~onClick, ~text, ()) =>
+    component(hooks => {
+      let wrapperStyle =
+        Style.[
+          backgroundColor(Color.rgba(1., 1., 1., 0.1)),
+          border(~width=2, ~color=Colors.white),
+          margin(16),
+        ];
+
+      (hooks,
+       <Clickable onClick>
+        <View style=wrapperStyle>
+          <Padding padding=4>
+            <Text style=textStyle text />
+          </Padding>
+        </View>
+       </Clickable>
+      )
+    })
+}
+
 type pr = {
   title: string,
   content: string,
@@ -60,7 +87,7 @@ let item = {
       (
         hooks,
         switch (content) {
-        | PR({title}) => <Text text=title />
+        | PR({title}) => <Text style=textStyle text=title />
         },
       )
     });
@@ -79,7 +106,7 @@ let itemList = {
     component(hooks => {
       (
         hooks,
-        <View>
+        <View style>
           {items
            |> List.map(content => <item content />)
            |> React.listToElement}
@@ -151,7 +178,19 @@ let main = {
           }
         };
 
-      (hooks, <itemList items focus dispatch />);
+      let onClick = (_) => {
+        let newItems = [PR({
+          title: "Hello World",
+            content: "Lorem ipsum...",
+            id: items |> List.length |> string_of_int
+        }), ...items];
+        setItems(newItems);
+      };
+
+      (hooks, <View style>
+       <itemList items focus dispatch />
+       <button text="Create Item" onClick />
+       </View>);
     });
 };
 
@@ -160,7 +199,7 @@ let init = app => {
 
   let win = App.createWindow(app, "Work");
 
-  let element = <View><main /></View>;
+  let element = <View style><main /></View>;
 
   let _ = UI.start(win, element);
   ();
