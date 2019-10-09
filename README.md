@@ -1,4 +1,4 @@
-# Work
+# Work ( Thinking of a better name... )
 
 An app to manage my work across a bunch of apps
 
@@ -16,6 +16,7 @@ Starting with github
 ### Next step
 - [ ] Sync with local branches
 - [ ] Allow for a more local workflow and then sync it with github PRs
+- [ ] Come up with a better name
 
 ## Design Goals
 - Fully keyboard driven
