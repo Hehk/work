@@ -40,7 +40,7 @@ open Revery.UI.Components;
 /* }; */
 
 let style = Style.[]
-let textStyle = Style.[color(Colors.white), fontFamily("Roboto-Regular.ttf"), fontSize(20)]
+let textStyle = Style.[color(Colors.white), fontFamily("Hack-Regular.ttf"), fontSize(20)]
 
 let button = {
   let component = React.component("Button");
