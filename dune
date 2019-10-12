@@ -5,4 +5,7 @@
     (libraries
         bigarray
         Revery
+        cohttp
+        lwt
+        cohttp-lwt-unix
             ))

@@ -39,8 +39,13 @@ open Revery.UI.Components;
 /*     }); */
 /* }; */
 
-let style = Style.[]
-let textStyle = Style.[color(Colors.white), fontFamily("Hack-Regular.ttf"), fontSize(20)]
+let style = Style.[];
+let textStyle =
+  Style.[
+    color(Colors.white),
+    fontFamily("Hack-Regular.ttf"),
+    fontSize(20),
+  ];
 
 let button = {
   let component = React.component("Button");
@@ -54,17 +59,16 @@ let button = {
           margin(16),
         ];
 
-      (hooks,
-       <Clickable onClick>
-        <View style=wrapperStyle>
-          <Padding padding=4>
-            <Text style=textStyle text />
-          </Padding>
-        </View>
-       </Clickable>
-      )
-    })
-}
+      (
+        hooks,
+        <Clickable onClick>
+          <View style=wrapperStyle>
+            <Padding padding=4> <Text style=textStyle text /> </Padding>
+          </View>
+        </Clickable>,
+      );
+    });
+};
 
 type pr = {
   title: string,
@@ -132,10 +136,8 @@ let main = {
     component(hooks => {
       let (items, setItems, hooks) =
         React.Hooks.state(
-          [
-            /* PR({title: "hello", content: "", id: "1"}), */
-            /* PR({title: "2", content: "2", id: "2"}), */
-          ],
+          [], /* PR({title: "hello", content: "", id: "1"}), */
+          /* PR({title: "2", content: "2", id: "2"}), */
           hooks,
         );
       let (focus, setFocus, hooks) = React.Hooks.state("0", hooks);
@@ -171,26 +173,37 @@ let main = {
           | None => ()
           | Some(index) =>
             let newId =
-              switch (List.nth(items, index === List.length(items) - 1 ? index : index + 1)) {
+              switch (
+                List.nth(
+                  items,
+                  index === List.length(items) - 1 ? index : index + 1,
+                )
+              ) {
               | PR(item) => item.id
               };
             setFocus(newId);
           }
         };
 
-      let onClick = (_) => {
-        let newItems = [PR({
-          title: "Hello World",
+      let onClick = _ => {
+        let newItems = [
+          PR({
+            title: "Hello World",
             content: "Lorem ipsum...",
-            id: items |> List.length |> string_of_int
-        }), ...items];
+            id: items |> List.length |> string_of_int,
+          }),
+          ...items,
+        ];
         setItems(newItems);
       };
 
-      (hooks, <View style>
-       <itemList items focus dispatch />
-       <button text="Create Item" onClick />
-       </View>);
+      (
+        hooks,
+        <View style>
+          <itemList items focus dispatch />
+          <button text="Create Item" onClick />
+        </View>,
+      );
     });
 };
 
@@ -199,7 +212,8 @@ let init = app => {
 
   let win = App.createWindow(app, "Work");
 
-  let element = <View style><main /></View>;
+  let element = <View style> <main /> </View>;
+  Github.query("{\"query\": \"query { viewer { login }}\"}") |> ignore;
 
   let _ = UI.start(win, element);
   ();
