@@ -194,6 +194,7 @@ let main = {
           }),
           ...items,
         ];
+        Github.query("{\"query\": \"query { viewer { login }}\"}") |> ignore;
         setItems(newItems);
       };
 
