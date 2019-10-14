@@ -71,4 +71,4 @@ _release/
 .merlin
 
 # config
-env.*
+src/Env.re

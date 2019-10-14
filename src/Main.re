@@ -194,7 +194,6 @@ let main = {
           }),
           ...items,
         ];
-        Github.query("{\"query\": \"query { viewer { login }}\"}") |> ignore;
         setItems(newItems);
       };
 
@@ -212,9 +211,8 @@ let init = app => {
   let _ = Revery.Log.listen((_, msg) => print_endline("LOG: " ++ msg));
 
   let win = App.createWindow(app, "Work");
-
   let element = <View style> <main /> </View>;
-  Github.query("{\"query\": \"query { viewer { login }}\"}") |> ignore;
+  /* Github.query() |> ignore; */
 
   let _ = UI.start(win, element);
   ();

@@ -4,14 +4,14 @@
   "description": "Revery quickstart",
   "license": "MIT",
   "esy": {
-    "build": "refmterr dune build -p App",
+    "build": "refmterr dune build -p Work",
     "buildsInSource": "_build"
   },
   "revery-packager": {
-    "bundleName": "ExampleApp",
-    "bundleId": "com.example.app",
-    "displayName": "Revery Example App",
-    "mainExecutable": "App",
+    "bundleName": "Work",
+    "bundleId": "com.example.work",
+    "displayName": "Work",
+    "mainExecutable": "Work",
     "windows": { "packages": [ "zip" ], "iconFile": "assets/icon.ico" },
     "darwin": {
       "packages": [ "tar", "dmg" ],
@@ -47,7 +47,7 @@
   },
   "scripts": {
     "format": "bash -c \"refmt --in-place *.re\"",
-    "run": "esy x App"
+    "run": "esy x Work"
   },
   "devDependencies": {
     "ocaml": "~4.7.0",

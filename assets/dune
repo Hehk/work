@@ -1,4 +1,4 @@
 (install
     (section bin)
-    (package App)
+    (package Work)
     (files Hack-Regular.ttf))

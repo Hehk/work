@@ -1,0 +1,13 @@
+(executable
+  (name Main)
+  (public_name Work)
+  (preprocess (pps graphql_ppx))
+  (libraries
+    bigarray
+    Revery
+    cohttp
+    lwt
+    cohttp-lwt-unix
+    yojson
+  )
+)
