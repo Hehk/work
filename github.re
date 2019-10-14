@@ -2,6 +2,21 @@ open Lwt;
 open Cohttp;
 open Cohttp_lwt_unix;
 
+module GetRepos = [%graphql {|
+query GetPRs { 
+  viewer { 
+    login
+    
+    repositories(first: 10, orderBy:{field:CREATED_AT, direction:DESC}){
+      nodes{
+        id
+				name
+      }
+    }
+  }
+}
+|}]
+
 
 let query = body => {
   let headers = Header.init() |> Header.add(_, "Authorization", "Bearer " ++ Env.githubAccessToken);

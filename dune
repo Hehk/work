@@ -2,10 +2,12 @@
     (name App)
     (package App)
     (public_name App)
+    (preprocess (pps graphql_ppx))
     (libraries
         bigarray
         Revery
         cohttp
         lwt
         cohttp-lwt-unix
+        yojson
             ))

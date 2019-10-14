@@ -22,3 +22,9 @@ Starting with github
 - Fully keyboard driven
 - Very simple UI
 - Support offline
+
+## Updating Graphql Schema
+
+Github returns json through a simple curl
+`curl -H "Authorization: bearer <token>" https://api.github.com/graphql > graphql_schema.json`
+
