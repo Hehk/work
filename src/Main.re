@@ -207,12 +207,33 @@ let main = {
     });
 };
 
+module GetPRs = [%graphql
+  {|
+query GetPRs {
+  viewer {
+    login
+
+    repositories(first: 10, orderBy:{field:CREATED_AT, direction:DESC}){
+      nodes{
+        id
+				name
+      }
+    }
+  }
+}
+|}
+];
+
 let init = app => {
   let _ = Revery.Log.listen((_, msg) => print_endline("LOG: " ++ msg));
 
   let win = App.createWindow(app, "Work");
   let element = <View style> <main /> </View>;
-  /* Github.query() |> ignore; */
+  Github.query(
+    ~onLoad=response => {print_endline("NAME: " ++ response#viewer#login)},
+    GetPRs.make(),
+  )
+  |> ignore;
 
   let _ = UI.start(win, element);
   ();
