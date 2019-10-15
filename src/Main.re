@@ -3,6 +3,23 @@ open Revery.Math;
 open Revery.UI;
 open Revery.UI.Components;
 
+module GetPRs = [%graphql
+  {|
+query GetPRs {
+  viewer {
+    login
+
+    repositories(first: 10, orderBy:{field:CREATED_AT, direction:DESC}){
+      nodes{
+        id
+				name
+      }
+    }
+  }
+}
+|}
+];
+
 /* let simpleButton = { */
 /*   let component = React.component("SimpleButton"); */
 
@@ -47,28 +64,28 @@ let textStyle =
     fontSize(20),
   ];
 
-let button = {
-  let component = React.component("Button");
+/* let button = { */
+/*   let component = React.component("Button"); */
 
-  (~children as _: list(React.syntheticElement), ~onClick, ~text, ()) =>
-    component(hooks => {
-      let wrapperStyle =
-        Style.[
-          backgroundColor(Color.rgba(1., 1., 1., 0.1)),
-          border(~width=2, ~color=Colors.white),
-          margin(16),
-        ];
+/*   (~children as _: list(React.syntheticElement), ~onClick, ~text, ()) => */
+/*     component(hooks => { */
+/*       let wrapperStyle = */
+/*         Style.[ */
+/*           backgroundColor(Color.rgba(1., 1., 1., 0.1)), */
+/*           border(~width=2, ~color=Colors.white), */
+/*           margin(16), */
+/*         ]; */
 
-      (
-        hooks,
-        <Clickable onClick>
-          <View style=wrapperStyle>
-            <Padding padding=4> <Text style=textStyle text /> </Padding>
-          </View>
-        </Clickable>,
-      );
-    });
-};
+/*       ( */
+/*         hooks, */
+/*         <Clickable onClick> */
+/*           <View style=wrapperStyle> */
+/*             <Padding padding=4> <Text style=textStyle text /> </Padding> */
+/*           </View> */
+/*         </Clickable>, */
+/*       ); */
+/*     }); */
+/* }; */
 
 type pr = {
   title: string,
@@ -129,18 +146,52 @@ let rec getIndex = (~f, ~index=0) =>
       getIndex(~f, ~index=index + 1, tl);
     };
 
+let rec flatMap = (~f) =>
+  fun
+  | [hd, ...tl] =>
+    switch (hd) {
+    | Some(x) => [f(x), ...flatMap(~f, tl)]
+    | None => flatMap(~f, tl)
+    }
+  | [] => [];
+
 let main = {
   let component = React.component("Main");
 
   (~children as _: list(React.syntheticElement), ()) =>
     component(hooks => {
-      let (items, setItems, hooks) =
-        React.Hooks.state(
-          [], /* PR({title: "hello", content: "", id: "1"}), */
-          /* PR({title: "2", content: "2", id: "2"}), */
+      let (items, setItems, hooks) = React.Hooks.state([], hooks);
+      let (focus, setFocus, hooks) = React.Hooks.state("0", hooks);
+      let hooks =
+        React.Hooks.effect(
+          OnMount,
+          () => {
+            let _ =
+              Github.query(
+                ~onLoad=
+                  response => {
+                    let items =
+                      switch (response#viewer#repositories#nodes) {
+                      | Some(nodes) =>
+                        nodes
+                        |> Array.to_list
+                        |> flatMap(~f=item =>
+                             PR({
+                               title: item#name,
+                               content: item#name,
+                               id: item#id,
+                             })
+                           )
+                      | None => []
+                      };
+                    setItems(items);
+                  },
+                GetPRs.make(),
+              );
+            None;
+          },
           hooks,
         );
-      let (focus, setFocus, hooks) = React.Hooks.state("0", hooks);
 
       let dispatch = action =>
         switch (action) {
@@ -185,55 +236,15 @@ let main = {
           }
         };
 
-      let onClick = _ => {
-        let newItems = [
-          PR({
-            title: "Hello World",
-            content: "Lorem ipsum...",
-            id: items |> List.length |> string_of_int,
-          }),
-          ...items,
-        ];
-        setItems(newItems);
-      };
-
-      (
-        hooks,
-        <View style>
-          <itemList items focus dispatch />
-          <button text="Create Item" onClick />
-        </View>,
-      );
+      (hooks, <View style> <itemList items focus dispatch /> </View>);
     });
 };
-
-module GetPRs = [%graphql
-  {|
-query GetPRs {
-  viewer {
-    login
-
-    repositories(first: 10, orderBy:{field:CREATED_AT, direction:DESC}){
-      nodes{
-        id
-				name
-      }
-    }
-  }
-}
-|}
-];
 
 let init = app => {
   let _ = Revery.Log.listen((_, msg) => print_endline("LOG: " ++ msg));
 
   let win = App.createWindow(app, "Work");
   let element = <View style> <main /> </View>;
-  Github.query(
-    ~onLoad=response => {print_endline("NAME: " ++ response#viewer#login)},
-    GetPRs.make(),
-  )
-  |> ignore;
 
   let _ = UI.start(win, element);
   ();

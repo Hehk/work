@@ -26,9 +26,7 @@ let query = (~onLoad, request) => {
     ((resp, body)) => {
       body
       |> Cohttp_lwt.Body.to_string
-      >|= (
-        body => body |> getData |> request#parse |> onLoad
-      );
+      >|= (body => body |> getData |> request#parse |> onLoad);
     }
   )
   |> Lwt_main.run;
