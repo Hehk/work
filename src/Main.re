@@ -20,42 +20,6 @@ query GetPRs {
 |}
 ];
 
-/* let simpleButton = { */
-/*   let component = React.component("SimpleButton"); */
-
-/*   (~children as _: list(React.syntheticElement), ()) => */
-/*     component(hooks => { */
-/*       let (count, setCount, hooks) = React.Hooks.state(0, hooks); */
-/*       let increment = () => setCount(count + 1); */
-
-/*       let wrapperStyle = */
-/*         Style.[ */
-/*           backgroundColor(Color.rgba(1., 1., 1., 0.1)), */
-/*           border(~width=2, ~color=Colors.white), */
-/*           margin(16), */
-/*         ]; */
-
-/*       let textHeaderStyle = */
-/*         Style.[ */
-/*           color(Colors.white), */
-/*           fontFamily("Roboto-Regular.ttf"), */
-/*           fontSize(20), */
-/*         ]; */
-
-/*       let textContent = "Click me: " ++ string_of_int(count); */
-/*       ( */
-/*         hooks, */
-/*         <Clickable onClick=increment> */
-/*           <View style=wrapperStyle> */
-/*             <Padding padding=4> */
-/*               <Text style=textHeaderStyle text=textContent /> */
-/*             </Padding> */
-/*           </View> */
-/*         </Clickable>, */
-/*       ); */
-/*     }); */
-/* }; */
-
 let style = Style.[];
 let textStyle =
   Style.[
@@ -63,29 +27,6 @@ let textStyle =
     fontFamily("Hack-Regular.ttf"),
     fontSize(20),
   ];
-
-/* let button = { */
-/*   let component = React.component("Button"); */
-
-/*   (~children as _: list(React.syntheticElement), ~onClick, ~text, ()) => */
-/*     component(hooks => { */
-/*       let wrapperStyle = */
-/*         Style.[ */
-/*           backgroundColor(Color.rgba(1., 1., 1., 0.1)), */
-/*           border(~width=2, ~color=Colors.white), */
-/*           margin(16), */
-/*         ]; */
-
-/*       ( */
-/*         hooks, */
-/*         <Clickable onClick> */
-/*           <View style=wrapperStyle> */
-/*             <Padding padding=4> <Text style=textStyle text /> </Padding> */
-/*           </View> */
-/*         </Clickable>, */
-/*       ); */
-/*     }); */
-/* }; */
 
 type pr = {
   title: string,
@@ -240,12 +181,17 @@ let main = {
     });
 };
 
+let handleKeyDown = ({ key }: Revery.Events.keyEvent) => {
+  print_endline("Keyboard: " ++ Revery.Key.toString(key))
+};
+
 let init = app => {
   let _ = Revery.Log.listen((_, msg) => print_endline("LOG: " ++ msg));
 
   let win = App.createWindow(app, "Work");
   let element = <View style> <main /> </View>;
 
+  let _ = Revery.Event.subscribe(win.onKeyDown, handleKeyDown);
   let _ = UI.start(win, element);
   ();
 };
