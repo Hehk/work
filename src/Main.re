@@ -13,13 +13,13 @@ let init = app => {
 
   let state = State.initialState();
   let win = App.createWindow(app, "Work");
-  let element = <main state=state dispatch=State.update(~state=state) />;
+  let element = <main state dispatch={State.update(~state)} />;
 
   let _ = Revery.Event.subscribe(win.onKeyDown, handleKeyDown);
   let update = UI.start(win, element);
 
   State.subscribe(newState => {
-    update(<main state=newState dispatch=State.update(~state=newState) />);
+    update(<main state=newState dispatch={State.update(~state=newState)} />)
   });
 
   ();

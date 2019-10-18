@@ -17,20 +17,12 @@ type pr = {
   id: string,
 };
 
-type item =
-  | PR(pr);
-
 let item = {
   let component = React.component("Item");
 
   (~children as _: list(React.syntheticElement), ~content, ()) =>
     component(hooks => {
-      (
-        hooks,
-        switch (content) {
-        | PR({title}) => <Text style=textStyle text=title />
-        },
-      )
+      (hooks, <Text style=textStyle text={content.title} />)
     });
 };
 
@@ -39,7 +31,7 @@ let itemList = {
 
   (
     ~children as _: list(React.syntheticElement),
-    ~items: list(item),
+    ~items: list(pr),
     ~focus: option(string),
     (),
   ) =>
