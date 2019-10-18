@@ -5,11 +5,11 @@ open Revery.UI.Components;
 
 let style = Style.[];
 let textStyle =
- Style.[
-   color(Colors.white),
-   fontFamily("Hack-Regular.ttf"),
-   fontSize(20),
- ];
+  Style.[
+    color(Colors.white),
+    fontFamily("Hack-Regular.ttf"),
+    fontSize(20),
+  ];
 
 type pr = {
   title: string,
@@ -39,8 +39,8 @@ let itemList = {
 
   (
     ~children as _: list(React.syntheticElement),
-    ~items : list(item),
-    ~focus : string,
+    ~items: list(item),
+    ~focus: option(string),
     (),
   ) =>
     component(hooks => {
@@ -54,4 +54,3 @@ let itemList = {
       )
     });
 };
-

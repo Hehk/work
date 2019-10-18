@@ -11,11 +11,17 @@ let handleKeyDown = ({key}: Revery.Events.keyEvent) => {
 let init = app => {
   let _ = Revery.Log.listen((_, msg) => print_endline("LOG: " ++ msg));
 
+  let state = State.initialState();
   let win = App.createWindow(app, "Work");
-  let element = <View> <main /> </View>;
+  let element = <main state=state dispatch=State.update(~state=state) />;
 
   let _ = Revery.Event.subscribe(win.onKeyDown, handleKeyDown);
-  let _ = UI.start(win, element);
+  let update = UI.start(win, element);
+
+  State.subscribe(newState => {
+    update(<main state=newState dispatch=State.update(~state=newState) />);
+  });
+
   ();
 };
 

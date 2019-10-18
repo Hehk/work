@@ -3,6 +3,7 @@ open Revery.Math;
 open Revery.UI;
 open Revery.UI.Components;
 open Item;
+open State;
 
 module GetPRs = [%graphql
   {|
@@ -49,40 +50,41 @@ let rec flatMap = (~f) =>
 let main = {
   let component = React.component("Main");
 
-  (~children as _: list(React.syntheticElement), ()) =>
+  (~children as _: list(React.syntheticElement), ~state : state, ~dispatch : action => unit, ()) =>
     component(hooks => {
-      let (items, setItems, hooks) = React.Hooks.state([], hooks);
-      let (focus, setFocus, hooks) = React.Hooks.state("0", hooks);
-      let hooks =
-        React.Hooks.effect(
-          OnMount,
-          () => {
-            let _ =
-              Github.query(
-                ~onLoad=
-                  response => {
-                    let items =
-                      switch (response#viewer#repositories#nodes) {
-                      | Some(nodes) =>
-                        nodes
-                        |> Array.to_list
-                        |> flatMap(~f=item =>
-                             PR({
-                               title: item#name,
-                               content: item#name,
-                               id: item#id,
-                             })
-                           )
-                      | None => []
-                      };
-                    setItems(items);
-                  },
-                GetPRs.make(),
-              );
-            None;
-          },
-          hooks,
-        );
+     let { items, focus } = state;
+      /* let (items, setItems, hooks) = React.Hooks.state([], hooks); */
+      /* let (focus, setFocus, hooks) = React.Hooks.state("0", hooks); */
+      /* let hooks = */
+      /*   React.Hooks.effect( */
+      /*     OnMount, */
+      /*     () => { */
+      /*       let _ = */
+      /*         Github.query( */
+      /*           ~onLoad= */
+      /*             response => { */
+      /*               let items = */
+      /*                 switch (response#viewer#repositories#nodes) { */
+      /*                 | Some(nodes) => */
+      /*                   nodes */
+      /*                   |> Array.to_list */
+      /*                   |> flatMap(~f=item => */
+      /*                        PR({ */
+      /*                          title: item#name, */
+      /*                          content: item#name, */
+      /*                          id: item#id, */
+      /*                        }) */
+      /*                      ) */
+      /*                 | None => [] */
+      /*                 }; */
+      /*               setItems(items); */
+      /*             }, */
+      /*           GetPRs.make(), */
+      /*         ); */
+      /*       None; */
+      /*     }, */
+      /*     hooks, */
+      /*   ); */
 
       /* let dispatch = action => */
       /*   switch (action) { */
@@ -130,5 +132,3 @@ let main = {
       (hooks, <View style> <itemList items focus /> </View>);
     });
 };
-
-
