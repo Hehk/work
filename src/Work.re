@@ -82,8 +82,8 @@ let main = {
                            )
                       | None => []
                       };
-                   
-                    dispatch(AddPRs(items))
+
+                    dispatch(AddPRs(items));
                   },
                 GetPRs.make(),
               );

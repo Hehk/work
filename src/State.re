@@ -16,7 +16,13 @@ let subscribers: ref(list(state => unit)) = ref([]);
 let update = (~state, action) => {
   let newState =
     switch (action) {
-    | AddPRs(items) => {...state, items}
+    | AddPRs(items) =>
+      if (state.focus === None) {
+        let first = List.hd(items);
+        {focus: Some(first.id), items};
+      } else {
+        {...state, items};
+      }
     | MoveUp(_) => state
     | MoveDown(_) => state
     };
