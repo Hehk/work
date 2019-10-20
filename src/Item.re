@@ -28,11 +28,18 @@ let item = {
 
   (~children as _: list(React.syntheticElement), ~content, ~focus, ()) =>
     component(hooks => {
-      let isFocus = switch focus {
+      let isFocus =
+        switch (focus) {
         | None => false
         | Some(id) => content.id === id
-      };
-      (hooks, <Text style={isFocus ? focusTextStyle : textStyle} text={content.title} />)
+        };
+      (
+        hooks,
+        <Text
+          style={isFocus ? focusTextStyle : textStyle}
+          text={content.title}
+        />,
+      );
     });
 };
 

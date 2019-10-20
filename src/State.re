@@ -5,15 +5,19 @@ type state = {
 
 type action =
   | AddPRs(list(Item.pr))
-  | MoveUp(string)
-  | MoveDown(string);
+  | MoveUp
+  | MoveDown;
 
 let initialState = () => {
   {focus: None, items: []};
 };
 
 let subscribers: ref(list(state => unit)) = ref([]);
-let update = (~state, action) => {
+let state = ref(initialState());
+
+let currentState = () => state^;
+let dispatch = (action) => {
+  let state = state^;
   let newState =
     switch (action) {
     | AddPRs(items) =>
@@ -23,8 +27,8 @@ let update = (~state, action) => {
       } else {
         {...state, items};
       }
-    | MoveUp(_) => state
-    | MoveDown(_) => state
+    | MoveUp => state
+    | MoveDown => state
     };
 
   List.iter(f => f(newState), subscribers^);
