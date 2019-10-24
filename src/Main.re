@@ -10,7 +10,7 @@ let handleKeyDown = ({key}: Revery.Events.keyEvent) => {
   | KEY_J => dispatch(MoveDown)
   | KEY_K => dispatch(MoveUp)
   | _ => ()
-  }
+  };
   print_endline("Keyboard: " ++ Revery.Key.toString(key));
 };
 
@@ -23,9 +23,8 @@ let init = app => {
   let _ = Revery.Event.subscribe(win.onKeyDown, handleKeyDown);
   let update = UI.start(win, element);
 
-  State.subscribe(newState => {
-    update(<main state=newState dispatch />);
-  }) |> ignore;
+  State.subscribe(newState => {update(<main state=newState dispatch />)})
+  |> ignore;
 
   ();
 };
