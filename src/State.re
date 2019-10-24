@@ -15,50 +15,49 @@ let initialState = () => {
 let subscribers: ref(list(state => unit)) = ref([]);
 let state = ref(initialState());
 
-let moveDown = (state) => {
-  let rec getNextFocus = (focus, items : list(Item.pr)) => {
-    switch items {
+let moveDown = state => {
+  let rec getNextFocus = (focus, items: list(Item.pr)) => {
+    switch (items) {
     | [] => focus
     | [hd] => focus
-    | [hd, snd, ...tl] => 
+    | [hd, snd, ...tl] =>
       if (hd.id === focus) {
-        snd.id
+        snd.id;
       } else {
-        getNextFocus(focus, [snd, ...tl])
-      };
-    }
-  }
+        getNextFocus(focus, [snd, ...tl]);
+      }
+    };
+  };
 
   switch (state.focus) {
   | None => state
-  | Some(focus) => 
+  | Some(focus) =>
     let newFocus = getNextFocus(focus, state.items);
-    { ...state, focus: Some(newFocus) }
-  }
+    {...state, focus: Some(newFocus)};
+  };
 };
 
-let moveUp = (state) => {
-  let rec getNextFocus = (focus, items : list(Item.pr)) => {
-    switch items {
+let moveUp = state => {
+  let rec getNextFocus = (focus, items: list(Item.pr)) => {
+    switch (items) {
     | [] => focus
     | [hd] => focus
-    | [hd, snd, ...tl] => 
+    | [hd, snd, ...tl] =>
       if (hd.id === focus) {
-        snd.id
+        snd.id;
       } else {
-        getNextFocus(focus, [snd, ...tl])
-      };
-    }
-  }
+        getNextFocus(focus, [snd, ...tl]);
+      }
+    };
+  };
 
   switch (state.focus) {
   | None => state
-  | Some(focus) => 
+  | Some(focus) =>
     let newFocus = getNextFocus(focus, List.rev(state.items));
-    { ...state, focus: Some(newFocus) }
-  }
+    {...state, focus: Some(newFocus)};
+  };
 };
-
 
 let currentState = () => state^;
 let dispatch = action => {
@@ -77,7 +76,7 @@ let dispatch = action => {
     };
 
   List.iter(f => f(newState), subscribers^);
-  state := newState
+  state := newState;
 };
 
 let subscribe = cb => {
