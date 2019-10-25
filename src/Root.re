@@ -22,7 +22,16 @@ query GetPRs {
 |}
 ];
 
-let style = Style.[];
+let rootStyle =
+  Style.[
+    backgroundColor(Colors.white),
+    color(Colors.black),
+    position(`Absolute),
+    top(0),
+    left(0),
+    right(0),
+    bottom(0),
+  ];
 
 type actions =
   | MOVE_UP(string)
@@ -58,8 +67,6 @@ let main = {
   ) =>
     component(hooks => {
       let {items, focus} = state;
-      /* let (items, setItems, hooks) = React.Hooks.state([], hooks); */
-      /* let (focus, setFocus, hooks) = React.Hooks.state("0", hooks); */
       let hooks =
         React.Hooks.effect(
           OnMount,
@@ -92,49 +99,6 @@ let main = {
           hooks,
         );
 
-      /* let dispatch = action => */
-      /*   switch (action) { */
-      /*   | MOVE_UP(id) => */
-      /*     switch ( */
-      /*       getIndex( */
-      /*         ~f= */
-      /*           fun */
-      /*           | PR(item) => item.id === id, */
-      /*         items, */
-      /*       ) */
-      /*     ) { */
-      /*     | None => () */
-      /*     | Some(index) => */
-      /*       let newId = */
-      /*         switch (List.nth(items, index === 0 ? index : index - 1)) { */
-      /*         | PR(item) => item.id */
-      /*         }; */
-      /*       setFocus(newId); */
-      /*     } */
-      /*   | MOVE_DOWN(id) => */
-      /*     switch ( */
-      /*       getIndex( */
-      /*         ~f= */
-      /*           fun */
-      /*           | PR(item) => item.id === id, */
-      /*         items, */
-      /*       ) */
-      /*     ) { */
-      /*     | None => () */
-      /*     | Some(index) => */
-      /*       let newId = */
-      /*         switch ( */
-      /*           List.nth( */
-      /*             items, */
-      /*             index === List.length(items) - 1 ? index : index + 1, */
-      /*           ) */
-      /*         ) { */
-      /*         | PR(item) => item.id */
-      /*         }; */
-      /*       setFocus(newId); */
-      /*     } */
-      /*   }; */
-
-      (hooks, <View style> <itemList items focus /> </View>);
+      (hooks, <View style=rootStyle> <itemList items focus /> </View>);
     });
 };

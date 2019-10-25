@@ -2,8 +2,8 @@ open Revery;
 open Revery.Math;
 open Revery.UI;
 open Revery.UI.Components;
-open Work;
 open State;
+open Root;
 
 let handleKeyDown = ({key}: Revery.Events.keyEvent) => {
   switch (key) {

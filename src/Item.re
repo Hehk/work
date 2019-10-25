@@ -6,15 +6,25 @@ open Revery.UI.Components;
 let style = Style.[];
 let textStyle =
   Style.[
-    color(Colors.white),
+    color(Colors.gray),
     fontFamily("Hack-Regular.ttf"),
+    padding(10),
     fontSize(20),
+    paddingTop(5),
+    paddingBottom(5),
+    paddingRight(5),
+    paddingLeft(5),
   ];
 let focusTextStyle =
   Style.[
     color(Colors.black),
+    backgroundColor(Colors.aliceBlue),
     fontFamily("Hack-Regular.ttf"),
     fontSize(20),
+    paddingTop(5),
+    paddingBottom(5),
+    paddingRight(5),
+    paddingLeft(5),
   ];
 
 type pr = {
