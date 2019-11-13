@@ -1,62 +1,91 @@
+type element =
+  | PR(Item.pr);
+
+type node = {
+  id: string,
+  content: element,
+  children: list(node) 
+};
+
 type state = {
-  focus: option(string),
-  items: list(Item.pr),
+  focus: list(string),
+  items: list(node),
 };
 
 type action =
-  | AddPRs(list(Item.pr))
+  | AddPR(Item.pr)
   | MoveUp
-  | MoveDown;
+  | MoveDown
+  | MoveIn
+  | Esc;
 
 let initialState = () => {
-  {focus: None, items: []};
+  {focus: [], items: []};
 };
 
 let subscribers: ref(list(state => unit)) = ref([]);
 let state = ref(initialState());
 
-let moveDown = state => {
-  let rec getNextFocus = (focus, items: list(Item.pr)) => {
-    switch (items) {
-    | [] => focus
-    | [hd] => focus
-    | [hd, snd, ...tl] =>
-      if (hd.id === focus) {
-        snd.id;
-      } else {
-        getNextFocus(focus, [snd, ...tl]);
-      }
+module Actions = {
+  let moveDown = state => {
+    let rec getNextFocus = (focus, items: list(node)) => {
+      switch (items) {
+      | [] => focus
+      | [hd] => focus
+      | [hd, snd, ...tl] =>
+        if (hd.id === focus) {
+          snd.id;
+        } else {
+          getNextFocus(focus, [snd, ...tl]);
+        }
+      };
+    };
+
+    switch (state.focus) {
+    | [] => state
+    | [focus, ..._] =>
+      let newFocus = getNextFocus(focus, state.items);
+      {...state, focus: [newFocus]};
     };
   };
 
-  switch (state.focus) {
-  | None => state
-  | Some(focus) =>
-    let newFocus = getNextFocus(focus, state.items);
-    {...state, focus: Some(newFocus)};
-  };
-};
+  let moveUp = state => {
+    let rec getNextFocus = (focus, items: list(node)) => {
+      switch (items) {
+      | [] => focus
+      | [hd] => focus
+      | [hd, snd, ...tl] =>
+        if (hd.id === focus) {
+          snd.id;
+        } else {
+          getNextFocus(focus, [snd, ...tl]);
+        }
+      };
+    };
 
-let moveUp = state => {
-  let rec getNextFocus = (focus, items: list(Item.pr)) => {
-    switch (items) {
-    | [] => focus
-    | [hd] => focus
-    | [hd, snd, ...tl] =>
-      if (hd.id === focus) {
-        snd.id;
-      } else {
-        getNextFocus(focus, [snd, ...tl]);
-      }
+    switch (state.focus) {
+    | [] => state
+    | [focus, ..._] =>
+      let newFocus = getNextFocus(focus, List.rev(state.items));
+      {...state, focus: [newFocus]};
     };
   };
 
-  switch (state.focus) {
-  | None => state
-  | Some(focus) =>
-    let newFocus = getNextFocus(focus, List.rev(state.items));
-    {...state, focus: Some(newFocus)};
-  };
+  // TODO: implement addPR
+  let addPr = (state) => {
+    print_endline("ADD_PR not implemented");
+    state;
+  }
+  // TODO: implement MoveIn
+  let moveIn = state => {
+    print_endline("MOVE_IN not implemented");
+    state;
+  }
+  // TODO: implement Esc
+  let escape = state => {
+    print_endline("ESCAPE not implemented");
+    state;
+  }
 };
 
 let currentState = () => state^;
@@ -64,15 +93,11 @@ let dispatch = action => {
   let oldState = state^;
   let newState =
     switch (action) {
-    | AddPRs(items) =>
-      if (oldState.focus === None) {
-        let first = List.hd(items);
-        {focus: Some(first.id), items};
-      } else {
-        {...oldState, items};
-      }
-    | MoveUp => moveUp(oldState)
-    | MoveDown => moveDown(oldState)
+    | AddPR(items) => Actions.addPr(oldState)
+    | MoveUp => Actions.moveUp(oldState)
+    | MoveDown => Actions.moveDown(oldState)
+    | MoveIn => Actions.moveIn(oldState)
+    | Esc => Actions.escape(oldState)
     };
 
   List.iter(f => f(newState), subscribers^);

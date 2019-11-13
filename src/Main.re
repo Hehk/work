@@ -9,6 +9,8 @@ let handleKeyDown = ({key}: Revery.Events.keyEvent) => {
   switch (key) {
   | KEY_J => dispatch(MoveDown)
   | KEY_K => dispatch(MoveUp)
+  | KEY_ENTER => dispatch(MoveIn)
+  | KEY_ESCAPE => dispatch(Esc)
   | _ => ()
   };
   print_endline("Keyboard: " ++ Revery.Key.toString(key));
