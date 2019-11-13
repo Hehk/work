@@ -4,7 +4,7 @@ type element =
 type node = {
   id: string,
   content: element,
-  children: list(node) 
+  children: list(node),
 };
 
 type state = {
@@ -72,20 +72,20 @@ module Actions = {
   };
 
   // TODO: implement addPR
-  let addPr = (state) => {
+  let addPr = state => {
     print_endline("ADD_PR not implemented");
     state;
-  }
+  };
   // TODO: implement MoveIn
   let moveIn = state => {
     print_endline("MOVE_IN not implemented");
     state;
-  }
+  };
   // TODO: implement Esc
   let escape = state => {
     print_endline("ESCAPE not implemented");
     state;
-  }
+  };
 };
 
 let currentState = () => state^;

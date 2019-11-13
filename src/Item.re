@@ -27,17 +27,16 @@ let focusTextStyle =
     paddingLeft(5),
   ];
 
-type prState = 
-| Loaded
-| Loading
-| Error(string)
+type prState =
+  | Loaded
+  | Loading
+  | Error(string);
 
 type pr = {
   id: string,
   title: string,
-  state: prState
+  state: prState,
 };
-
 
 let item = {
   let component = React.component("Item");
