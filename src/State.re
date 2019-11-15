@@ -1,5 +1,16 @@
+type prState =
+  | Loaded
+  | Loading
+  | Error(string);
+
+type pr = {
+  id: string,
+  title: string,
+  state: prState,
+};
+
 type element =
-  | PR(Item.pr);
+  | PR(pr);
 
 type node = {
   id: string,
@@ -13,7 +24,7 @@ type state = {
 };
 
 type action =
-  | AddPR(Item.pr)
+  | AddPR(pr)
   | MoveUp
   | MoveDown
   | MoveIn

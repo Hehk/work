@@ -27,21 +27,11 @@ let focusTextStyle =
     paddingLeft(5),
   ];
 
-type prState =
-  | Loaded
-  | Loading
-  | Error(string);
-
-type pr = {
-  id: string,
-  title: string,
-  state: prState,
-};
 
 let item = {
   let component = React.component("Item");
 
-  (~children as _: list(React.syntheticElement), ~content, ~focus, ()) =>
+  (~children as _: list(React.syntheticElement), ~content:State.pr, ~focus, ()) =>
     component(hooks => {
       let isFocus =
         switch (focus) {
@@ -63,7 +53,7 @@ let itemList = {
 
   (
     ~children as _: list(React.syntheticElement),
-    ~items: list(pr),
+    ~items: list(State.element),
     ~focus: option(string),
     (),
   ) =>
@@ -72,7 +62,11 @@ let itemList = {
         hooks,
         <View style>
           {items
-           |> List.map(content => <item content focus />)
+           |> List.map((element:State.element) => {
+             switch (element) {
+             | PR(content) => <item content focus />
+             }
+           })
            |> React.listToElement}
         </View>,
       )

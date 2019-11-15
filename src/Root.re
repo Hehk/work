@@ -75,22 +75,21 @@ let main = {
               Github.query(
                 ~onLoad=
                   response => {
-                    let items =
-                      switch (response#viewer#repositories#nodes) {
-                      | Some(nodes) =>
-                        nodes
-                        |> Array.to_list
-                        |> flatMap(~f=item =>
-                             {
-                               title: item#name,
-                               content: item#name,
-                               id: item#id,
-                             }
-                           )
-                      | None => []
-                      };
-
-                    dispatch(AddPRs(items));
+                    switch (response#viewer#repositories#nodes) {
+                    | Some(nodes) =>
+                      nodes
+                      |> Array.to_list
+                      |> flatMap(~f=item =>
+                           {
+                             title: item#name,
+                             id: item#id,
+                             state: Loading
+                           }
+                         )
+                      |> List.iter(item => dispatch(AddPR(item)))
+                      |> ignore
+                    | None => ()
+                    };
                   },
                 GetPRs.make(),
               );
