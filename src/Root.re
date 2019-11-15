@@ -80,16 +80,12 @@ let main = {
                       nodes
                       |> Array.to_list
                       |> flatMap(~f=item =>
-                           {
-                             title: item#name,
-                             id: item#id,
-                             state: Loading
-                           }
+                           {title: item#name, id: item#id, state: Loading}
                          )
                       |> List.iter(item => dispatch(AddPR(item)))
                       |> ignore
                     | None => ()
-                    };
+                    }
                   },
                 GetPRs.make(),
               );

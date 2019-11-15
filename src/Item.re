@@ -27,17 +27,17 @@ let focusTextStyle =
     paddingLeft(5),
   ];
 
-
 let item = {
   let component = React.component("Item");
 
-  (~children as _: list(React.syntheticElement), ~content:State.pr, ~focus, ()) =>
+  (
+    ~children as _: list(React.syntheticElement),
+    ~content: State.pr,
+    ~isFocus,
+    ~focus,
+    (),
+  ) =>
     component(hooks => {
-      let isFocus =
-        switch (focus) {
-        | None => false
-        | Some(id) => content.id === id
-        };
       (
         hooks,
         <Text
@@ -53,8 +53,8 @@ let itemList = {
 
   (
     ~children as _: list(React.syntheticElement),
-    ~items: list(State.element),
-    ~focus: option(string),
+    ~items: list(State.node),
+    ~focus: list(string),
     (),
   ) =>
     component(hooks => {
@@ -62,11 +62,11 @@ let itemList = {
         hooks,
         <View style>
           {items
-           |> List.map((element:State.element) => {
-             switch (element) {
-             | PR(content) => <item content focus />
-             }
-           })
+           |> List.map((element: State.node) => {
+                switch (element.content) {
+                | PR(content) => <item content isFocus={element.id === List.hd(focus)} focus={List.tl(focus)} />
+                }
+              })
            |> React.listToElement}
         </View>,
       )
