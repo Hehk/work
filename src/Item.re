@@ -34,7 +34,7 @@ let item = {
     ~children as _: list(React.syntheticElement),
     ~content: State.pr,
     ~isFocus,
-    ~focus,
+    ~focus: list(string),
     (),
   ) =>
     component(hooks => {
@@ -44,7 +44,7 @@ let item = {
           style={isFocus ? focusTextStyle : textStyle}
           text={content.title}
         />,
-      );
+      )
     });
 };
 
@@ -63,8 +63,15 @@ let itemList = {
         <View style>
           {items
            |> List.map((element: State.node) => {
-                switch (element.content) {
-                | PR(content) => <item content isFocus={element.id === List.hd(focus)} focus={List.tl(focus)} />
+                switch (element.content, focus) {
+                | (PR(content), [hd, ...tl]) =>
+                  <item
+                    content
+                    isFocus={hd === content.id}
+                    focus={tl}
+                  />
+                | (PR(content), []) => 
+                  <item content isFocus={false} focus={[]} />
                 }
               })
            |> React.listToElement}
