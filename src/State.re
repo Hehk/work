@@ -82,22 +82,21 @@ module Actions = {
     };
   };
 
-  let addPr = (state, pr : pr) => {
+  let addPr = (state, pr: pr) => {
     {
       ...state,
-      items: [{ id: pr.id, content: PR(pr), children: [] }, ...state.items]
-    }
+      items: [{id: pr.id, content: PR(pr), children: []}, ...state.items],
+    };
   };
   // TODO: implement MoveIn
   let moveIn = state => {
     switch (state.focus, state.items) {
-      | ([], []) => state
-      | ([], [hd, ...tl]) => { ...state, focus: [hd.id] }
-      | (_, _) => {
-        print_endline("Not implemented");
-        state;
-      }
-    }
+    | ([], []) => state
+    | ([], [hd, ...tl]) => {...state, focus: [hd.id]}
+    | (_, _) =>
+      print_endline("Not implemented");
+      state;
+    };
   };
   // TODO: implement Esc
   let escape = state => {

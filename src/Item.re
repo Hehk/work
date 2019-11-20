@@ -65,13 +65,9 @@ let itemList = {
            |> List.map((element: State.node) => {
                 switch (element.content, focus) {
                 | (PR(content), [hd, ...tl]) =>
-                  <item
-                    content
-                    isFocus={hd === content.id}
-                    focus={tl}
-                  />
-                | (PR(content), []) => 
-                  <item content isFocus={false} focus={[]} />
+                  <item content isFocus={hd === content.id} focus=tl />
+                | (PR(content), []) =>
+                  <item content isFocus=false focus=[] />
                 }
               })
            |> React.listToElement}
